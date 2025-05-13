@@ -6,9 +6,9 @@ namespace ECommerceMVC.ViewComponents
 {
     public class MenuLoaiViewComponent : ViewComponent
     {
-        private readonly Hshop2023Context db;
+        private readonly DbecomerceContext db;
 
-        public MenuLoaiViewComponent(Hshop2023Context context)
+        public MenuLoaiViewComponent(DbecomerceContext context)
         {
             db = context;
         }
@@ -17,7 +17,7 @@ namespace ECommerceMVC.ViewComponents
         {
             var data = db.Loais.Select(lo => new MenuLoaiVM
             {
-                MaLoai=lo.MaLoai,
+                MaLoai=lo.Maloai,
                 TenLoai = lo.TenLoai,
                 SoLuong = lo.HangHoas.Count
             }).OrderBy(p => p.TenLoai);

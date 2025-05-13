@@ -3,19 +3,17 @@ using System.Collections.Generic;
 
 namespace EcomerceMVC.Data;
 
-public partial class ChiTietHd
+public partial class GioHang
 {
-    public int MaCt { get; set; }
+    public int MaGh { get; set; }
 
-    public int MaHd { get; set; }
+    public int MaKh { get; set; }
 
     public int MaHh { get; set; }
 
-    public decimal DonGia { get; set; }
-
     public int SoLuong { get; set; }
 
-    public virtual HoaDon MaHdNavigation { get; set; } = null!;
-
     public virtual HangHoa MaHhNavigation { get; set; } = null!;
+
+    public virtual User MaKhNavigation { get; set; } = null!;
 }

@@ -7,9 +7,9 @@ namespace ECommerceMVC.Controllers
 {
     public class HangHoaController : Controller
     {
-        private readonly Hshop2023Context db;
+        private readonly DbecomerceContext db;
 
-        public HangHoaController(Hshop2023Context context)
+        public HangHoaController(DbecomerceContext context)
         {
             db = context;
         }
@@ -30,10 +30,10 @@ namespace ECommerceMVC.Controllers
             {
                 MaHh = p.MaHh,
                 TenHH = p.TenHh ?? "Không có tên",
-                DonGia = p.DonGia ?? 0,
+                DonGia = p.DonGia ,
                 Hinh = p.Hinh ?? "no-image.jpg",
-                MoTaNgan = p.MoTaDonVi ?? string.Empty,
-                TenLoai = p.MaLoaiNavigation != null ? p.MaLoaiNavigation.TenLoai : "Không phân loại"
+                MoTaNgan = p.MoTa ?? string.Empty,
+                TenLoai = p.MaLoaiNavigation.TenLoai
             }).ToList();
 
             return View(result);
@@ -56,9 +56,9 @@ namespace ECommerceMVC.Controllers
             {
                 MaHh = p.MaHh,
                 TenHH = p.TenHh,
-                DonGia = p.DonGia ?? 0,
+                DonGia = p.DonGia,
                 Hinh = p.Hinh ?? "",
-                MoTaNgan = p.MoTaDonVi ?? "",
+                MoTaNgan = p.MoTa ?? "",
                 TenLoai = p.MaLoaiNavigation.TenLoai
             });
 
@@ -81,10 +81,10 @@ namespace ECommerceMVC.Controllers
             {
                 MaHh = data.MaHh,
                 TenHH = data.TenHh,
-                DonGia = data.DonGia ?? 0,
+                DonGia = data.DonGia,
                 ChiTiet = data.MoTa ?? string.Empty,
                 Hinh = data.Hinh ?? string.Empty,
-                MoTaNgan = data.MoTaDonVi ?? string.Empty,
+                MoTaNgan = data.MoTa ?? string.Empty,
                 TenLoai = data.MaLoaiNavigation.TenLoai,
                 SoluongTon = 10,//tinh sau
                 DiemDanhGia = 5,//check sau

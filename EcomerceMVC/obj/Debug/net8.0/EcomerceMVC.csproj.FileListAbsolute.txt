@@ -258,3 +258,4 @@ C:\Users\Admin\source\repos\EcomerceMVC\EcomerceMVC\obj\Debug\net8.0\refint\Ecom
 C:\Users\Admin\source\repos\EcomerceMVC\EcomerceMVC\obj\Debug\net8.0\EcomerceMVC.pdb
 C:\Users\Admin\source\repos\EcomerceMVC\EcomerceMVC\obj\Debug\net8.0\EcomerceMVC.genruntimeconfig.cache
 C:\Users\Admin\source\repos\EcomerceMVC\EcomerceMVC\obj\Debug\net8.0\ref\EcomerceMVC.dll
+C:\Users\Admin\source\repos\EcomerceMVC\EcomerceMVC\obj\Debug\net8.0\EcomerceMVC.sourcelink.json
