@@ -1,0 +1,83 @@
+﻿@model IEnumerable<EcomerceMVC.Data.Loai>
+
+@{
+    ViewData["Title"] = "Quản lý loại sản phẩm";
+    Layout = "_LayoutAdmin";
+}
+
+
+
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Quản lý loại sản phẩm</h1>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Thêm loại mới
+            </a>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <table id="categoryTable" class="table table-hover table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.TenLoai)</th>
+                            <th>Số sản phẩm</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.TenLoai)</td>
+                                <td>@item.HangHoas.Count</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Maloai" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Maloai" class="btn btn-sm btn-info">
+                                        <i class="fas fa-info-circle"></i> Chi tiết
+                                    </a>
+                                    <button class="btn btn-sm btn-danger delete-btn"
+                                            data-id="@item.Maloai"
+                                            data-name="@item.TenLoai"
+                                    @(item.HangHoas.Any() ? "disabled" : "")>
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#categoryTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                order: [[0, 'asc']],
+                language: {
+                    search: "Tìm kiếm loại sản phẩm:",
+                    emptyTable: "Không tìm thấy loại sản phẩm nào"
+                }
+            });
+
+            $('.delete-btn').click(function () {
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+
+                if (confirm(`Bạn có chắc muốn xóa loại sản phẩm "${name}" không?`)) {
+                    window.location.href = '@Url.Action("Delete")/' + id;
+                }
+            });
+        });
+    </script>
+}

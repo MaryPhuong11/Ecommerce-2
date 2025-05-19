@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "Admin";
+    Layout = "_LayoutAdmin";
+}
+
+
+<div class="card shadow mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Số sản phẩm theo loại</h5>
+        <canvas id="productChart"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var chartData = @Html.Raw(Json.Serialize(ViewData["ChartData"]));
+        var labels = chartData.map(item => item.tenLoai);
+        var data = chartData.map(item => item.count);
+
+        var ctx = document.getElementById('productChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số sản phẩm',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+}

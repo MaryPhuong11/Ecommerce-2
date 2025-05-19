@@ -26,7 +26,7 @@ namespace ECommerceMVC.Controllers
             }
 
             // Chuyển đổi sang ViewModel
-            var result = query.Select(p => new HangHoaVM
+                var result = query.Select(p => new HangHoaVM
             {
                 MaHh = p.MaHh,
                 TenHH = p.TenHh ?? "Không có tên",
