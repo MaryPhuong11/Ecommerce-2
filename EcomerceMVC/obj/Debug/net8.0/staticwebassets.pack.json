@@ -1249,6 +1249,14 @@
       "PackagePath": "staticwebassets\\images\\Screenshot 2025-04-03 210329.png"
     },
     {
+      "Id": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\wwwroot\\images\\anh7.png",
+      "PackagePath": "staticwebassets\\images\\anh7.png"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\wwwroot\\images\\anh8.png",
+      "PackagePath": "staticwebassets\\images\\anh8.png"
+    },
+    {
       "Id": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\wwwroot\\images\\download (1).jpg",
       "PackagePath": "staticwebassets\\images\\download (1).jpg"
     },
