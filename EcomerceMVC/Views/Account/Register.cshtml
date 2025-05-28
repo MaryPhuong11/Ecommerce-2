@@ -1,0 +1,25 @@
+﻿@model RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card p-4 shadow" style="width: 350px;">
+        <h3 class="text-center text-success mb-3">Sign Up</h3>
+
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input class="form-control mb-2" asp-for="Username" placeholder="Username" />
+            <input class="form-control mb-2" asp-for="Password" type="password" placeholder="Password" />
+            <input class="form-control mb-2" asp-for="ConfirmPassword" type="password" placeholder="Repeat Password" />
+            <input class="form-control mb-2" asp-for="Email" placeholder="Email" />
+            <button type="submit" class="btn btn-success w-100 mb-2">SIGN UP</button>
+
+            <a href="/account/GoogleLogin" class="btn btn-danger w-100">Sign up with Google</a>
+        </form>
+
+        <div class="text-center mt-2">
+            Already have an account? <a href="/Account/Login">SIGN IN</a>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,6 @@
-using EcomerceMVC.Data;
+﻿using EcomerceMVC.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,27 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DbecomerceContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Ecomerce"));
 });
+
+//xac thuc gg
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+})
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.CallbackPath = "/signin-google";
+
+});
+
 
 var app = builder.Build();
 
@@ -24,7 +47,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
+// Middleware xác thực
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

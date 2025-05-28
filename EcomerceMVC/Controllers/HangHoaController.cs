@@ -86,7 +86,7 @@ namespace ECommerceMVC.Controllers
                 Hinh = data.Hinh ?? string.Empty,
                 MoTaNgan = data.MoTa ?? string.Empty,
                 TenLoai = data.MaLoaiNavigation.TenLoai,
-                SoluongTon = 10,//tinh sau
+                SoluongTon = data.SoLuong,
                 DiemDanhGia = 5,//check sau
             };
             return View(result);

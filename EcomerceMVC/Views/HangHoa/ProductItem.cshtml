@@ -1,5 +1,25 @@
 ﻿@model IEnumerable<ECommerceMVC.ViewModels.HangHoaVM>
-
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 <h3>Có <b>@Model.Count()</b> sản phẩm.</h3>
 @foreach (var item in Model)
 {
@@ -18,7 +38,11 @@
                 <p>@item.MoTaNgan</p>
                 <div class="d-flex justify-content-between flex-lg-wrap">
                     <p class="text-dark fs-5 fw-bold mb-0">$ @item.DonGia</p>
-                    <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Đưa vào giỏ</a>
+                    <!-- đưa hàng vào giỏ quantity = 1 -->
+                    <form asp-action="AddToCart" asp-controller="Cart" method="post">
+                        <input type="hidden" name="id" value="@item.MaHh" />
+                        <button type="submit" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Đưa vào giỏ</button>
+                    </form>
                 </div>
             </div>
         </div>

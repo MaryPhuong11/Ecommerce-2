@@ -1,0 +1,29 @@
+﻿@model LoginViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card p-4 shadow" style="width: 350px;">
+        <h3 class="text-center text-success mb-3">Sign In</h3>
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input class="form-control mb-2" asp-for="Username" placeholder="Username" />
+            <input class="form-control mb-2" asp-for="Password" type="password" placeholder="Password"  />
+
+            <div class="text-end mb-2">
+                <a href="#">Forgot Username / Password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mb-2">SIGN IN</button>
+
+            <a href="/account/GoogleLogin" class="btn btn-danger w-100">Login with Google</a>
+        </form>
+
+        <div class="text-center mt-2">
+            Don’t have an account? <a href="/Account/Register">SIGN UP NOW</a>
+        </div>
+    </div>
+</div>
+
+

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\EcomerceMVC.csproj": {}
+    "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\EcomerceMVC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\EcomerceMVC.csproj": {
+    "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\EcomerceMVC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\EcomerceMVC.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\EcomerceMVC.csproj",
         "projectName": "EcomerceMVC",
-        "projectPath": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\EcomerceMVC.csproj",
+        "projectPath": "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\EcomerceMVC.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -46,6 +46,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.Google": {
+              "target": "Package",
+              "version": "[8.0.5, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.15, )"

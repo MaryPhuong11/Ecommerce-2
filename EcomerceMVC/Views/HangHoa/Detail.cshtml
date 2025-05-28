@@ -17,6 +17,28 @@
 <!-- Single Product Start -->
 <div class="container-fluid py-5 mt-5">
     <div class="container py-5">
+        <!-- Thêm phần hiển thị thông báo -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         <div class="row g-4 mb-5">
             <div class="col-lg-8 col-xl-9">
                 <div class="row g-4">
@@ -39,20 +61,24 @@
                             <i class="fa fa-star"></i>
                         </div>
                         <p class="mb-4">@Model.MoTaNgan</p>
-                        <div class="input-group quantity mb-5" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                    <i class="fa fa-minus"></i>
-                                </button>
+                        <p class="mb-4">@Model.SoluongTon sản phẩm có sẵn</p>
+                        <form asp-action ="AddToCart" asp-controller="Cart" asp-route-id="@Model.MaHh">
+                            <div class="input-group quantity mb-5" style="width: 130px;">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <input type="number" class="form-control form-control-sm text-center border-0" value="1" name="quantity" onchange="validate">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Mua hàng</a>
+                            <button class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Mua hàng</button>
+                        </form>
+
                     </div>
                     <div class="col-lg-12">
                         <nav>
@@ -467,3 +493,39 @@
     </div>
 </div>
 <!-- Single Product End -->
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const minusBtn = document.querySelector(".btn-minus");
+            const plusBtn = document.querySelector(".btn-plus");
+            const qtyInput = document.querySelector("input[name='quantity']");
+
+
+            minusBtn.addEventListener("click", function () {
+                let value = parseInt(qtyInput.value) || 1;
+                if (value > 1) qtyInput.value = value - 1;
+            });
+
+            plusBtn.addEventListener("click", function () {
+                let value = parseInt(qtyInput.value) || 1;
+                qtyInput.value = value + 1;
+            });
+            //tu dong an thong bao
+            const alerts = document.querySelectorAll(".alert");
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.remove("show");
+                    alert.classList.add("fade");
+                    setTimeout(() => alert.remove(), 150); // Xóa hoàn toàn sau khi mờ dần
+                }, 5000); // 5 giây
+            });
+        });
+        function validate() {
+            const qtyInput = document.querySelector("input[name='quantity']");
+            const maxQuantity = @Model.SoluongTon;
+            if (qtyInput.value > maxQuantity) {
+                qtyInput.value = maxQuantity;
+            }
+        }
+    </script>
+}

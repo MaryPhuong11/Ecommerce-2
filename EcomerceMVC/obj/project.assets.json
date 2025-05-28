@@ -641,6 +641,22 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Authentication.Google/8.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.Razor.Language/6.0.24": {
         "type": "package",
         "compile": {
@@ -3500,6 +3516,21 @@
         "lib/netstandard1.0/zh-Hant/Humanizer.resources.dll",
         "lib/netstandard2.0/zh-Hant/Humanizer.resources.dll",
         "logo.png"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Google/8.0.5": {
+      "sha512": "E9gxy1BzCAQ04n7rVSbPe2bZux2zSaCEY63am3W2abaEikdxCKeai+rj34U++/uYybaAoprG39CikVhYL4imKg==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.google/8.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.dll",
+        "lib/net8.0/Microsoft.AspNetCore.Authentication.Google.xml",
+        "microsoft.aspnetcore.authentication.google.8.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.google.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Razor.Language/6.0.24": {
@@ -7589,6 +7620,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Microsoft.AspNetCore.Authentication.Google >= 8.0.5",
       "Microsoft.EntityFrameworkCore >= 8.0.15",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.15",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.15",
@@ -7601,11 +7633,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\EcomerceMVC.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\EcomerceMVC.csproj",
       "projectName": "EcomerceMVC",
-      "projectPath": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\EcomerceMVC.csproj",
+      "projectPath": "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\EcomerceMVC.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\source\\repos\\EcomerceMVC\\EcomerceMVC\\obj\\",
+      "outputPath": "C:\\Users\\Admin\\E-commerce\\EcomerceMVC\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -7640,6 +7672,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.Google": {
+            "target": "Package",
+            "version": "[8.0.5, )"
+          },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[8.0.15, )"
