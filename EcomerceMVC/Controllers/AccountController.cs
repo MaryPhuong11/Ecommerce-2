@@ -23,10 +23,10 @@ namespace EcomerceMVC.Controllers
         {
             return View();
         }
-
+        public IActionResult Register() => View();
         public IActionResult Login() => View();
 
-        public IActionResult Register() => View();
+        
 
         // ==== [ĐĂNG NHẬP] ====
         [HttpPost]
@@ -97,7 +97,24 @@ namespace EcomerceMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            // Xóa cookie xác thực, bao gồm tất cả claims (Name, Role, UserId) được lưu trong cookie
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // Xóa tất cả cookie khác để đảm bảo không còn dữ liệu người dùng
+            foreach (var cookie in HttpContext.Request.Cookies.Keys)
+            {
+                HttpContext.Response.Cookies.Delete(cookie);
+            }
+
+            // Xóa dữ liệu phiên (nếu có sử dụng session) để đảm bảo không còn thông tin người dùng
+           // HttpContext.Session.Clear();
+
+            // Ngăn trình duyệt lưu trữ cache để tránh truy cập dữ liệu cũ
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
+            // Chuyển hướng về trang chủ
             return RedirectToAction("Index", "Home");
         }
 
@@ -112,40 +129,75 @@ namespace EcomerceMVC.Controllers
 
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/")
         {
+            // Authenticate the user with the external login provider
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             if (!result.Succeeded)
+            {
                 return RedirectToAction("LoginFailed");
+            }
 
+            // Extract claims from the authenticated principal
             var claims = result.Principal.Identities
                 .FirstOrDefault()?.Claims.Select(claim => new
                 {
                     claim.Type,
                     claim.Value
-                });
+                })?.ToList();
 
-            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var providerKey = claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (claims == null)
+            {
+                return RedirectToAction("LoginFailed");
+            }
 
-            // Kiểm tra xem đã có user với GoogleID này chưa
+            // Extract relevant claim values
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var providerKey = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(providerKey) || string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("LoginFailed");
+            }
+
+            // Check if user with this Google ID already exists
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.GgId == providerKey);
 
+            User user;
             if (existingUser == null)
             {
-                // Chưa có => tạo mới
-                var newUser = new User
+                // Create new user if not exists
+                user = new User
                 {
                     GgId = providerKey,
                     Email = email,
-                    HoTen = name,
+                    HoTen = name ?? "Unknown", // Fallback in case name is null
                     VaiTro = "user"
                 };
 
-                _context.Users.Add(newUser);
+                _context.Users.Add(user);
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                user = existingUser;
+            }
 
-            // Sau khi xử lý xong, cho đăng nhập như bình thường
+            // Create claims for the authenticated user
+            var userClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email), // Use Email as Name claim
+                new Claim(ClaimTypes.Role, user.VaiTro ?? "user"),
+                new Claim("UserId", user.MaKh.ToString()) // Ensure user ID is set
+            };
+
+            // Create identity and principal
+            var identity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            // Sign in the user
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // Redirect to returnUrl or default
             return Redirect(returnUrl ?? "/");
         }
 
