@@ -1,5 +1,7 @@
 ﻿using EcomerceMVC.Data;
 using EcomerceMVC.ViewModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,8 @@ namespace EcomerceMVC.Controllers
             if (!maKh.HasValue)
             {
                 TempData["ErrorMessage"] = "Không thể xác định thông tin khách hàng.";
+                //
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return RedirectToAction("Login", "Account");
             }
 
@@ -60,6 +64,8 @@ namespace EcomerceMVC.Controllers
             if (!maKh.HasValue)
             {
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.";
+                //
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return RedirectToAction("Login", "Account");
             }
 
@@ -152,6 +158,8 @@ namespace EcomerceMVC.Controllers
             if (!maKh.HasValue)
             {
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập để cập nhật giỏ hàng.";
+                //
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return RedirectToAction("Login", "Account");
             }
 
@@ -180,6 +188,8 @@ namespace EcomerceMVC.Controllers
             if (!maKh.HasValue)
             {
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập để cập nhật giỏ hàng.";
+                //
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 return RedirectToAction("Login", "Account");
             }
 

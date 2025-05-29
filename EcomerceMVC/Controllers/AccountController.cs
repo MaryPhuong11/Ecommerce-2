@@ -7,7 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using System.Security.Claims;
 namespace EcomerceMVC.Controllers
 {
     public class AccountController : Controller
@@ -119,58 +123,47 @@ namespace EcomerceMVC.Controllers
         }
 
         // ==== [GOOGLE LOGIN] ====
-        [HttpGet("account/GoogleLogin")]
-        public IActionResult ExternalLogin(string provider, string returnUrl = "/")
+        [AllowAnonymous]
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
-            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Challenge(properties, provider);
         }
 
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/")
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null)
         {
-            // Authenticate the user with the external login provider
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (!result.Succeeded)
+            var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded || authenticateResult.Principal == null)
             {
-                return RedirectToAction("LoginFailed");
+                TempData["ErrorMessage"] = "Không thể đăng nhập bằng Google.";
+                return RedirectToAction("Login");
             }
 
-            // Extract claims from the authenticated principal
-            var claims = result.Principal.Identities
-                .FirstOrDefault()?.Claims.Select(claim => new
-                {
-                    claim.Type,
-                    claim.Value
-                })?.ToList();
+            var claims = authenticateResult.Principal.Claims.ToList();
 
-            if (claims == null)
-            {
-                return RedirectToAction("LoginFailed");
-            }
-
-            // Extract relevant claim values
             var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var providerKey = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(providerKey) || string.IsNullOrEmpty(email))
             {
-                return RedirectToAction("LoginFailed");
+                TempData["ErrorMessage"] = "Không thể lấy thông tin từ tài khoản Google.";
+                return RedirectToAction("Login");
             }
 
-            // Check if user with this Google ID already exists
+            // Kiểm tra tài khoản đã tồn tại chưa
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.GgId == providerKey);
-
             User user;
             if (existingUser == null)
             {
-                // Create new user if not exists
                 user = new User
                 {
                     GgId = providerKey,
                     Email = email,
-                    HoTen = name ?? "Unknown", // Fallback in case name is null
+                    HoTen = name ?? "Unknown",
                     VaiTro = "user"
                 };
 
@@ -182,24 +175,28 @@ namespace EcomerceMVC.Controllers
                 user = existingUser;
             }
 
-            // Create claims for the authenticated user
+            // Tạo claims cho đăng nhập
             var userClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Email), // Use Email as Name claim
-                new Claim(ClaimTypes.Role, user.VaiTro ?? "user"),
-                new Claim("UserId", user.MaKh.ToString()) // Ensure user ID is set
-            };
+                {
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, user.VaiTro ?? "user"),
+                    new Claim("UserId", user.MaKh.ToString())
+                };
 
-            // Create identity and principal
             var identity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
-
-            // Sign in the user
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            // Đăng nhập
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            // Redirect to returnUrl or default
-            return Redirect(returnUrl ?? "/");
+            //await HttpContext.SignInAsync(
+            //  CookieAuthenticationDefaults.AuthenticationScheme,
+            //  new ClaimsPrincipal(claimsIdentity));
+
+            return Redirect(string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl);
         }
+
+
 
 
         public IActionResult LoginFailed()
